@@ -1,9 +1,8 @@
 name: Count changed files
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   count-changed-files:
@@ -15,7 +14,4 @@ jobs:
         id: branch-name
         run: |
              echo "${GITHUB_REF#refs/heads/}"
-             $(git diff origin/main origin/dev --name-only)
              
-
-   
