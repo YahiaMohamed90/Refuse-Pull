@@ -13,9 +13,11 @@ jobs:
 
       - name: Count modified files
         run: |
-          MODIFIED_FILES=$(git diff --name-only HEAD^ -- /)
-          FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
-          echo "::set-output name=count::$FILE_COUNT"
+         MODIFIED_FILES=$(git diff --name-only HEAD^ -- /home/runner/work/Refuse-Pull/Refuse-Pull)
+
+         FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
+
+         echo "::set-output name=count::$FILE_COUNT"
 
       - name: Display the number of modified files
         run: echo "There are $FILE_COUNT modified files."
