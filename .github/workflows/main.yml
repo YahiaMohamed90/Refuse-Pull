@@ -14,10 +14,4 @@ jobs:
       - name: Get current branch name
         id: branch-name
         run: echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
-      - name: Get count of changed files
-        id: changed-files
-        run: |
-          git fetch origin ${{ steps.branch-name.outputs.branch }}:${{ steps.branch-name.outputs.branch }}
-          echo "::set-output name=count::$(git diff --name-only origin/${{ steps.branch-name.outputs.branch }} | wc -l)"
-      - name: Print count of changed files
-        run: echo "The count of changed files on branch ${{ steps.branch-name.outputs.branch }} is ${{ steps.changed-files.outputs.count }}"
+   
