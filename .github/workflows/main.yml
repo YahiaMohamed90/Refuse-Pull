@@ -1,0 +1,21 @@
+name: Count modified files
+
+on:
+  push:
+    branches: main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Count modified files
+        run: |
+         MODIFIED_FILES=$(git diff --name-only HEAD~1 HEAD)
+         FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
+         echo "::set-output name=count::$FILE_COUNT"
+
+      - name: Display the number of modified files
+        run: echo "There are $FILE_COUNT modified files."
