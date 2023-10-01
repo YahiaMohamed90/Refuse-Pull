@@ -16,5 +16,5 @@ jobs:
       - name: Count modified files
         run: |
              git log -1
-             git diff dev staging --name-only
+             git diff main dev --name-only
 
