@@ -1,10 +1,8 @@
 name: Count changed files
 
 on:
-  push:
-    branches:
-      - main
-      - dev
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   count-changed-files:
