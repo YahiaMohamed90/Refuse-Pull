@@ -16,7 +16,7 @@ jobs:
       - name: Count modified files
         id: file_count
         run: |
-          MODIFIED_FILES=$(git diff dev --name-only)
+          MODIFIED_FILES=$(git diff dev main --name-only)
           FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
           echo "::set-output name=count::$FILE_COUNT"
 
