@@ -15,3 +15,11 @@ jobs:
         run: echo "Base branch name is ${{ github.base_ref }}"
       - name: Get head branch name
         run: echo "Head branch name is ${{ github.head_ref }}"
+      - name: Count modified files
+        id: file_count
+        run: |
+          MODIFIED_FILES=$(git diff main --name-only)
+          FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
+          echo "$FILE_COUNT"
+
+        
