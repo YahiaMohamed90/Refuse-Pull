@@ -19,4 +19,16 @@ jobs:
         run: |
                MODIFIED_FILES=$(git diff main --name-only)
                FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
-               echo "$FILE_COUNT"
+               echo "::set-output name=count::$FILE_COUNT"
+
+      - name: Refuse Pull Request
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.pull_request.head.repo.name }}
+          issue_number: ${{ github.event.pull_request.number }}
+          body: |
+            ⛔️ This pull request violates the rules. Please check the guidelines and make the necessary changes.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}       
