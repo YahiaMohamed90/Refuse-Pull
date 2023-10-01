@@ -1,7 +1,9 @@
 name: Count modified files
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize]
+
     branches: [ main ]
 
 jobs:
