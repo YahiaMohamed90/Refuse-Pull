@@ -14,7 +14,9 @@ jobs:
       - name: Get base branch name
         run: echo "Base branch name is ${{ github.base_ref }}"
       - name: Get head branch name
-        run: echo "Head branch name is ${{ github.head_ref }}"
+        run: echo "Head branch name is ${{ github.head_ref }}"\
+      - name: Get branch name
+        run: git branch -a
       - name: Get current branch name
         run: echo "${GITHUB_REF#refs/heads/}"
       - name: Count modified files
