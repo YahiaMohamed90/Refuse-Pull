@@ -3,6 +3,9 @@ name: Count modified files
 on:
   pull_request:
     types: [opened, synchronize]
+    branches:
+      - master
+      - dev
 
 jobs:
   build:
@@ -15,7 +18,7 @@ jobs:
       
       - name: Count modified files
         run: |
-               MODIFIED_FILES=$(git diff dev --name-only)
+               MODIFIED_FILES=$(git diff dev main --name-only)
                FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
                echo "$FILE_COUNT"
        
