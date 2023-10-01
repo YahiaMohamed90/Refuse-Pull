@@ -1,10 +1,9 @@
 name: Count modified files
 
 on:
-  push:
-    branches:
-          - dev
-          - main
+  pull_request:
+    types: [opened, synchronize]
+ 
 
 jobs:
   build:
@@ -14,12 +13,12 @@ jobs:
       - uses: actions/checkout@v2
 
 
-      
       - name: Count modified files
+        id: file_count
         run: |
-               MODIFIED_FILES=$(git diff main --name-only)
-               FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
-               echo "::set-output name=count::$FILE_COUNT"
+          MODIFIED_FILES=$(git diff dev --name-only)
+          FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
+          echo "::set-output name=count::$FILE_COUNT"
 
       
       - name: Reject PR
