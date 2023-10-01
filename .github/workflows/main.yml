@@ -3,15 +3,16 @@ name: Count modified files
 on:
   pull_request:
     types: [opened, synchronize]
+ 
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-     
+
       - name: Count modified files
         id: file_count
         run: |
@@ -19,6 +20,7 @@ jobs:
           FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
           echo "::set-output name=count::$FILE_COUNT"
 
+      
       - name: Reject PR
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
