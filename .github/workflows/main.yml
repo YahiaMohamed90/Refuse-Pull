@@ -23,30 +23,21 @@ jobs:
       - name: Get current branch name
         run: echo "${GITHUB_REF#refs/heads/}"
       - name: Count modified files
-        id: file_count
         run: |
-          MODIFIED_FILES=$(git diff origin/main origin/dev --name-only)
-          FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
-          echo "$FILE_COUNT"
-          file_changes_limit=1
-          if [ $FILE_COUNT -gt $file_changes_limit ]; then
-            echo "::error::This PR exceeds the file changes limit ($file_changes_limit files)."
-          fi
+            MODIFIED_FILES=$(git diff origin/main origin/dev --name-only)
+            FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
+            echo "::set-output name=count::$FILE_COUNT"
 
-
-      - name: Refuse the pull request
-        run: |
-          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          github_token=${{ secrets.GITHUB_TOKEN }}
-          curl -X POST \
-            -H "Authorization: token $github_token" \
-            -H "Content-Type: application/json" \
-            -d '{"body": "This pull request does not meet the criteria."}' \
-            "https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$pr_number/comments"
-          echo "::set-output name=refused::true"
-
-      - name: Notify refusal in a PR comment
-        if: steps.refuse.outputs.refused == 'true'
-        run: echo "This pull request has been refused."
-
-        
+          # If no conditions are violated, the script will exit successfully.
+      
+      - name: Refuse Pull Request
+        uses: octokit/request-action@v2.x
+        with:
+          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.pull_request.head.repo.name }}
+          issue_number: ${{ github.event.pull_request.number }}
+          body: |
+            ⛔️ This pull request violates the rules. Please check the guidelines and make the necessary changes.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
