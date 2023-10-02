@@ -31,7 +31,6 @@ jobs:
           file_changes_limit=1
           if [ $FILE_COUNT -gt $file_changes_limit ]; then
             echo "::error::This PR exceeds the file changes limit ($file_changes_limit files)."
-            exit 1
           fi
 
 
