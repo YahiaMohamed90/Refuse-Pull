@@ -28,16 +28,26 @@ jobs:
           MODIFIED_FILES=$(git diff origin/main origin/dev --name-only)
           FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
           echo "$FILE_COUNT"
+          file_changes_limit=1
+          if [ $FILE_COUNT -gt $file_changes_limit ]; then
+            echo "::error::This PR exceeds the file changes limit ($file_changes_limit files)."
+            exit 1
+          fi
 
-      - name: Reject PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: steps.file_count.outputs.count > 1
+
+      - name: Refuse the pull request
         run: |
-          COMMENT_BODY="🚫 This pull request has been automatically rejected because it modifies more than one file. Please create separate pull requests for each file change to ensure better reviewability and maintainability."
-          curl -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d "{\"body\": \"$COMMENT_BODY\"}" \
-            "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"   
+          pr_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          github_token=${{ secrets.GITHUB_TOKEN }}
+          curl -X POST \
+            -H "Authorization: token $github_token" \
+            -H "Content-Type: application/json" \
+            -d '{"body": "This pull request does not meet the criteria."}' \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/pulls/$pr_number/comments"
+          echo "::set-output name=refused::true"
+
+      - name: Notify refusal in a PR comment
+        if: steps.refuse.outputs.refused == 'true'
+        run: echo "This pull request has been refused."
 
         
