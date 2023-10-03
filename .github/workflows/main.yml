@@ -1,17 +1,33 @@
-name: Count changed files
+name: Example workflow
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    branches:
+      - main
+      - dev
 
 jobs:
-  count-changed-files:
+  example-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout codee
         uses: actions/checkout@v2
+      - name: Get base branch name
+        run: echo "Base branch name is ${{ github.base_ref }}"
+      - name: fetch origin 
+        run: git fetch origin
+      - name: Get head branch name
+        run: echo "Head branch name is ${{ github.head_ref }}"\
+      - name: Get branch name
+        run: git branch -a
       - name: Get current branch name
-        id: branch-name
+        run: echo "${GITHUB_REF#refs/heads/}"
+      - name: Count modified files
         run: |
-             echo "${GITHUB_REF#refs/heads/}"
-             
+            MODIFIED_FILES=$(git diff origin/main origin/dev --name-only)
+            FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
+            echo "::set-output name=count::$FILE_COUNT"
+            ADDED_LINES=$(git diff --diff-filter=A --unified=0 origin/main origin/dev | grep '^+' | wc -l)
+            echo "$ADDED_LINES"
+
+         
