@@ -27,17 +27,7 @@ jobs:
             MODIFIED_FILES=$(git diff origin/main origin/dev --name-only)
             FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
             echo "::set-output name=count::$FILE_COUNT"
+            ADDED_LINES=$(git diff --diff-filter=A --unified=0 origin/main origin/dev | grep '^+' | wc -l)
+            echo "$ADDED_LINES"
 
-          # If no conditions are violated, the script will exit successfully.
-      
-      - name: Refuse Pull Request
-        uses: octokit/request-action@v2.x
-        with:
-          route: POST /repos/{owner}/{repo}/issues/{issue_number}/comments
-          owner: ${{ github.repository_owner }}
-          repo: ${{ github.event.pull_request.head.repo.name }}
-          issue_number: ${{ github.event.pull_request.number }}
-          body: |
-            ⛔️ This pull request violates the rules. Please check the guidelines and make the necessary changes.
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         
