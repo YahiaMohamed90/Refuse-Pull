@@ -24,7 +24,7 @@ jobs:
         run: echo "${GITHUB_REF#refs/heads/}"
       - name: Count modified files
         run: |
-            MODIFIED_FILES=$(git diff --diff-filter=AD origin/master..origin/dev | grep "^+" | wc -l)
+            MODIFIED_FILES=$(git diff --diff-filter=AD origin/main..origin/dev | grep "^+" | wc -l)
             FILE_COUNT=$(echo "$MODIFIED_FILES" | wc -l)
             echo "::set-output name=count::$FILE_COUNT"
             ADDED_LINES=$(git diff --diff-filter=A --unified=0 origin/main origin/dev | grep '^+' | wc -l)
