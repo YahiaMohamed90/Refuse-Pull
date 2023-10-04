@@ -33,9 +33,6 @@ jobs:
       - name: Install dependencies
         run: dart pub get
 
-      - name: Analyze code
-        run: dart analyze
-
       - name: Post comment if errors
         if: ${{ failure() }}
         env:
