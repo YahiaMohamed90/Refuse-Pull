@@ -27,5 +27,21 @@ jobs:
            
             ADDED_LINES=$(git diff --shortstat origin/main...origin/dev | awk '{print $4}')
             echo "$ADDED_LINES"
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1
 
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Analyze code
+        run: dart analyze
+
+      - name: Post comment if errors
+        if: ${{ failure() }}
+        env:
+          COMMENT_BODY: "🚫 This pull request has been automatically rejected because it has errors in the code."
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: ${{ env.COMMENT_BODY }}
          
