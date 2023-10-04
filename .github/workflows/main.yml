@@ -29,6 +29,9 @@ jobs:
             echo "$ADDED_LINES"
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1
+        
+      - name: Analyze code
+        run: dart analyze 
 
       - name: Post comment if errors
         if: ${{ failure() }}
