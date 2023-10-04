@@ -36,5 +36,9 @@ jobs:
       - name: Post comment if errors
         if: ${{ failure() }}
         run: |
-           echo " failur "
+            echo " failur "
+      - name: Post comment if no errors
+        if: ${{ !failure() }}
+        run: echo "✅ This pull request has passed all checks."
+           
       
