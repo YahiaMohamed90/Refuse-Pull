@@ -47,7 +47,7 @@ jobs:
             echo " failur "
       - name: Post comment if no errors
         if: ${{ !failure() }}
-        run: echo "Added lines: $ADDED_LINES"
+        run: echo "Added lines:$ADDED_LINES"
 
 
       - uses: act10ns/slack@v1
