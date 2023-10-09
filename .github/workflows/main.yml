@@ -29,6 +29,7 @@ jobs:
            
             ADDED_LINES=$(git diff --shortstat origin/main...origin/dev | awk '{print $4}')
             echo "$ADDED_LINES"
+            echo "${{ github.event.head_commit.message }}"
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1
         
