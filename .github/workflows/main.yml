@@ -6,7 +6,7 @@ on:
       commit_message:
         description: 'Commit message'
         required: true
-  pull_request:
+  push:
     branches:
       - main
       - dev
