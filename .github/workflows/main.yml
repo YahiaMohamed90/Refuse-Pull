@@ -6,11 +6,10 @@ on:
       commit_message:
         description: 'Commit message'
         required: true
-  push:
-    branches:
-      - main
-      - dev
 
+  pull_request:
+    types: [opened, synchronize]
+    
 jobs:
   example-job:
     runs-on: ubuntu-latest
