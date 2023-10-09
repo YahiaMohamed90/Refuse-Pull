@@ -1,6 +1,11 @@
 name: Example workflow
 
 on:
+  workflow_dispatch:
+    inputs:
+      commit_message:
+        description: 'Commit message'
+        required: true
   pull_request:
     branches:
       - main
