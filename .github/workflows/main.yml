@@ -47,7 +47,7 @@ jobs:
             echo " failur "
       - name: Post comment if no errors
         if: ${{ !failure() }}
-        run: echo "✅ This pull request has passed all checks."
+        run: echo "$ADDED_LINES"
 
       - uses: act10ns/slack@v1
         with:
