@@ -34,7 +34,7 @@ jobs:
            
             ADDED_LINES=$(git diff --shortstat origin/main...origin/dev | awk '{print $4}')
             echo "$ADDED_LINES"
-            echo "${{ github.event.head_commit.message }}"
+            echo "${{ github.event.inputs.commit_message }}"
       - name: Setup Dart SDK
         uses: dart-lang/setup-dart@v1
         
@@ -56,7 +56,7 @@ jobs:
           channel: '#general'
           message: |
             Workflow run completed with status ${{ job.status }}
-            Commit message: "${{ github.event.head_commit.message }}"
+            Commit message: "${{ github.event.inputs.commit_message }}"
         if: always()
            
       
