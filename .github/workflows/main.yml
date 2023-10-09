@@ -9,6 +9,8 @@ on:
 jobs:
   example-job:
     runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
       - name: Checkout codee
         uses: actions/checkout@v2
@@ -27,5 +29,28 @@ jobs:
            
             ADDED_LINES=$(git diff --shortstat origin/main...origin/dev | awk '{print $4}')
             echo "$ADDED_LINES"
+      - name: Setup Dart SDK
+        uses: dart-lang/setup-dart@v1
+        
+      - name: Analyze code
+        run: dart analyze 
 
-         
+      - name: Post comment if errors
+        if: ${{ failure() }}
+        run: |
+            echo " failur "
+      - name: Post comment if no errors
+        if: ${{ !failure() }}
+        run: echo "✅ This pull request has passed all checks."
+
+      - uses: act10ns/slack@v1
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: '#projects-devops'
+          message: |
+            Workflow run completed with status ${{ job.status }}
+            Commit message: "${{ github.event.head_commit.message }}"
+        if: always()
+           
+      
